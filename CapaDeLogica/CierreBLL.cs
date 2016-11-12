@@ -11,6 +11,7 @@ namespace CapaDeLogica
 {
     public class CierreBLL
     {
+
         Contexto db = new Contexto();
 
         public RespuestaDTO<CierreDTO> InsertarCierre(CierreDTO cierre)
@@ -36,8 +37,8 @@ namespace CapaDeLogica
                     cierreDal.Efectivo = cierre.Efectivo;
                     cierreDal.AlmacenId = cierre.AlmacenId;
                     cierreDal.Facturas = cierre.Facturas;
-                    cierreDal.Invercion = cierre.Invercion;
-                    cierreDal.Costos = cierre.Costos;
+                    cierreDal.Invercion = cierre.Costos;
+                    cierreDal.Costos = cierre.Gastos;
                     cierreDal.Fecha = cierre.Fecha;
                   
                     db.Cierres.Add(cierreDal);

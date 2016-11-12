@@ -9,7 +9,6 @@ namespace Entidades.DTO.Almacen
 {
     public class CierreDTO
     {
-        [Required]
         public int AlmacenId { get; set; }
 
         [Required]
@@ -29,10 +28,10 @@ namespace Entidades.DTO.Almacen
         public double Facturas { get; set; }
 
         [Required]
-        public double Invercion { get; set; }
+        public double Costos { get; set; }
 
         [Required]
-        public double Costos { get; set; }
+        public double Gastos { get; set; }
 
     }
 }

@@ -112,7 +112,8 @@ namespace AspNetIdentity.Controllers
                 PrimerNombre = createUserModel.PrimerNombre,
                 PrimerApellido = createUserModel.PrimerApellido,
                 SegundoNombre = createUserModel.SegundoNombre,
-                SegundoApellido = createUserModel.SegundoApellido
+                SegundoApellido = createUserModel.SegundoApellido,
+                LicenseExpiration = DateTime.Now.Date
             };
 
             IdentityResult addUserResult = await this.AppUserManager.CreateAsync(user, createUserModel.Password);

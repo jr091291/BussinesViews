@@ -85,11 +85,8 @@ namespace AspNetIdentity.Controllers
             {
                 return Ok(administradorQuery);
             }
-            if (administradorQuery.Data.AlmacenId != cierre.AlmacenId) {
-                response.Mensagge = "El Usuario Sin Permisos";
-                response.Errors.Add(new ResponseErrorDTO("","El Usuario No Tiene Permisos Sobre Este Almacen"));
-            }
             cierre.AdministradorId = user.Id;
+            cierre.AlmacenId = administradorQuery.Data.AlmacenId;
             return GetActionResult(new Callback(CreateCierre), cierre);
         }
 
