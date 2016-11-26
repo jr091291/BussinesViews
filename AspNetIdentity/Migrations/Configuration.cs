@@ -42,6 +42,8 @@ namespace AspNetIdentity.Migrations
                 roleManager.Create(new IdentityRole { Name = "SuperAdmin" });
                 roleManager.Create(new IdentityRole { Name = "Admin" });
                 roleManager.Create(new IdentityRole { Name = "User" });
+                roleManager.Create(new IdentityRole { Name = "inversionista" });
+                roleManager.Create(new IdentityRole { Name = "Administrador" });
             }
 
             var adminUser = manager.FindByName("jr091291");

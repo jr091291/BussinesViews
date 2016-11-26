@@ -35,7 +35,12 @@ namespace AspNetIdentity.Controllers
             if (adminDTO.AlmacenId != 0 && adminDTO.UserId !=null) {
                 admin.UserId = adminDTO.UserId;
                 admin.AlmacenId = adminDTO.AlmacenId;
-                return GetActionResult(new Callback(CreateAdmin), admin);
+                RespuestaDTO<AdministradorDTO> r =  CreateAdministrador(admin);
+                if (r.Errors.Count == 0) {
+                    this.AppUserManager.AddToRoles(admin.UserId, new string[] { "Administrador"});
+                    r.Mensagge += " Se Agrego Role Administrador";
+                }
+                return Ok(r);
             }
 
             response.Errors.Add(new ResponseErrorDTO { Code = "404", Mensagge = "Verifique La Informacion Suministrada" });
@@ -59,7 +64,14 @@ namespace AspNetIdentity.Controllers
             {
                 invercionista.UserId = adminDTO.UserId;
                 invercionista.AlmacenId = adminDTO.AlmacenId;
-                return GetActionResult(new Callback(CreateInvercionistaAlmacen), invercionista);
+                RespuestaDTO<InversionistaDTO> r = CreateInvercionistaAlmacen(invercionista);
+              
+                if (r.Errors.Count == 0)
+                {
+                    this.AppUserManager.AddToRoles(invercionista.UserId, new string[] { "inversionista" });
+                    r.Mensagge += ", Se Agrego Role inversionista";
+                }
+                return Ok(r);
             }
             response.Errors.Add(new ResponseErrorDTO { Code="404", Mensagge="Verifique La Informacion Suministrada"});
             response.Mensagge = "No se encontro Informacion";
@@ -94,7 +106,7 @@ namespace AspNetIdentity.Controllers
             return new AlmacenBLL().InsertarAlmacen((AlmacenDTO) model);
         }
 
-        private RespuestaDTO<AdministradorDTO> CreateAdmin(Object model)
+        private RespuestaDTO<AdministradorDTO> CreateAdministrador(Object model)
         {
             return new AdministradorBLL().InsertarAdministrador((AdministradorDTO) model);
         }
