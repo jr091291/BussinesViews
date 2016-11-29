@@ -67,5 +67,32 @@ namespace CapaDeLogica
                 return response;
             }
         }
+
+        public List<AlmacenDTO> getAlmacenInv(string id)
+        {
+            List<AlmacenDTO> lista = new List<AlmacenDTO>();
+            var user = db.Invercionistas.Find(id);
+            if (user != null) {
+                var inver = db.AlmacenInversionistas.Where(ad => ad.InversionistaId == id).ToList<AlmacenInversionista>();
+                if (inver != null)
+                {
+                    foreach (AlmacenInversionista item in inver)
+                    {
+                        Almacen a = db.Almacenes.Find(item.AlmacenId);
+                        lista.Add(new AlmacenDTO
+                        {
+                            AlmacenId = a.AlmacenId,
+                            Correo = a.Correo,
+                            Direccion = a.Direccion,
+                            Nombre = a.Nombre,
+                            Telefono = a.Telefono
+                        });
+                    }
+
+                }
+            }
+            
+            return lista;
+        }
     }
 }

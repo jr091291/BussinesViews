@@ -69,5 +69,27 @@ namespace CapaDeLogica
                 return response;
             }
         }
+
+        public List<AlmacenDTO> getAlmacenAdmin(string id)
+        {
+            List<AlmacenDTO> lista = new List<AlmacenDTO>();
+            var admin = db.Administradores.Where(ad => ad.AdministradorId == id).ToList<Administrador>();
+            if (admin != null)
+            {
+                foreach (Administrador administrador in admin) {
+                    Almacen a = db.Almacenes.Find(administrador.AlmacenId);
+                    lista.Add( new AlmacenDTO
+                    {
+                        AlmacenId = a.AlmacenId,
+                        Correo = a.Correo,
+                        Direccion = a.Direccion,
+                        Nombre = a.Nombre,
+                        Telefono = a.Telefono
+                    });
+                }
+              
+            }
+            return lista;
+        }
     }
 }

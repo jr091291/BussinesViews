@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\Almacen\AlmacenListDTO.cs" />
     <Compile Include="DTO\Almacen\AdministradorDTO.cs" />
     <Compile Include="DTO\Almacen\AlmacenDTO.cs" />
     <Compile Include="DTO\Almacen\CierreDTO.cs" />
