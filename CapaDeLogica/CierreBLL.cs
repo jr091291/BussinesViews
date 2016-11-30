@@ -73,23 +73,14 @@ namespace CapaDeLogica
                 TotalVentasAlmacenesDTO totalVentas = new TotalVentasAlmacenesDTO();
                 List<TotalVentasAlmacenDTO> ventas = new List<TotalVentasAlmacenDTO>();
 
-                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                foreach (AlmacenDTO almacen in solicitud.ListadoAlmacenes)
                 {
                     TotalVentasAlmacenDTO ventasAlmacen = new TotalVentasAlmacenDTO();
                     List<DatosVentasDto> cierres = new List<DatosVentasDto>();
 
-                    var almacen = db.Almacenes.Find(idAlmacen);
+                    ventasAlmacen.Almacen = almacen;
 
-                    ventasAlmacen.Almacen = new AlmacenDTO
-                    {
-                        AlmacenId = almacen.AlmacenId,
-                        Correo = almacen.Correo,
-                        Direccion = almacen.Direccion,
-                        Nombre = almacen.Nombre,
-                        Telefono = almacen.Telefono
-                    };
-
-                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c=> c.Fecha).ToList<Cierre>();
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == almacen.AlmacenId).OrderBy(c=> c.Fecha).ToList<Cierre>();
 
                     foreach (Cierre c in query)
                     {
@@ -133,23 +124,15 @@ namespace CapaDeLogica
                 TotalCostosAlmacenesDTO totalCostos= new TotalCostosAlmacenesDTO();
                 List<TotalCostosAlmacenDTO> costos = new List<TotalCostosAlmacenDTO>();
 
-                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                foreach (AlmacenDTO almacen in solicitud.ListadoAlmacenes)
                 {
                     TotalCostosAlmacenDTO costosAlmacen = new TotalCostosAlmacenDTO();
                     List<DatosCostosDTO> cierres = new List<DatosCostosDTO>();
 
-                    var almacen = db.Almacenes.Find(idAlmacen);
+                  
+                    costosAlmacen.Almacen = almacen;
 
-                    costosAlmacen.Almacen = new AlmacenDTO
-                    {
-                        AlmacenId = almacen.AlmacenId,
-                        Correo = almacen.Correo,
-                        Direccion = almacen.Direccion,
-                        Nombre = almacen.Nombre,
-                        Telefono = almacen.Telefono
-                    };
-
-                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c => c.Fecha).ToList<Cierre>();
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == almacen.AlmacenId).OrderBy(c => c.Fecha).ToList<Cierre>();
 
                     foreach (Cierre c in query)
                     {
@@ -194,23 +177,15 @@ namespace CapaDeLogica
                 TotalGastosAlmacenes totalGastos = new TotalGastosAlmacenes();
                 List<TotalGastosAlmacen> gastos = new List<TotalGastosAlmacen>();
 
-                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                foreach (AlmacenDTO almacen in solicitud.ListadoAlmacenes)
                 {
                     TotalGastosAlmacen costosAlmacen = new TotalGastosAlmacen();
                     List<DatosGastosDTO> cierres = new List<DatosGastosDTO>();
 
-                    var almacen = db.Almacenes.Find(idAlmacen);
+                 
+                    costosAlmacen.Almacen = almacen;
 
-                    costosAlmacen.Almacen = new AlmacenDTO
-                    {
-                        AlmacenId = almacen.AlmacenId,
-                        Correo = almacen.Correo,
-                        Direccion = almacen.Direccion,
-                        Nombre = almacen.Nombre,
-                        Telefono = almacen.Telefono
-                    };
-
-                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c => c.Fecha).ToList<Cierre>();
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == almacen.AlmacenId).OrderBy(c => c.Fecha).ToList<Cierre>();
 
                     foreach (Cierre c in query)
                     {
@@ -230,6 +205,63 @@ namespace CapaDeLogica
 
                 totalGastos.CostosPorAlmacen = gastos;
                 response.Data = totalGastos; 
+                response.Mensagge = "Consulta Realizada Con Exito";
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Mensagge = "Se Ha Presentado Un Error";
+                response.Errors.Add(new ResponseErrorDTO("500", e.Message));
+                return response;
+            }
+        }
+
+        public RespuestaDTO<TotalBalanceGeneralAlmacenesDTO> getBalanceGeneral(SolicitudReporteDTO solicitud)
+        {
+            RespuestaDTO<TotalBalanceGeneralAlmacenesDTO> response = new RespuestaDTO<TotalBalanceGeneralAlmacenesDTO>();
+            try
+            {
+                TotalBalanceGeneralAlmacenesDTO balanceGeneralAlmacenes = new TotalBalanceGeneralAlmacenesDTO();
+                List<TotalBalanceGeneralAlmacen> balanceGeneralAlmacen = new List<TotalBalanceGeneralAlmacen>();
+
+                foreach (AlmacenDTO almacen in solicitud.ListadoAlmacenes)
+                {
+                    TotalBalanceGeneralAlmacen balanceAlmacen = new TotalBalanceGeneralAlmacen();
+                    List<BalanceGeneralDTO> cierres = new List<BalanceGeneralDTO>();
+
+                    balanceAlmacen.Almacen = almacen;
+
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == almacen.AlmacenId).OrderBy(c => c.Fecha).ToList<Cierre>();
+
+                    foreach (Cierre c in query)
+                    {
+                        cierres.Add(new BalanceGeneralDTO
+                        {
+                            Fecha = c.Fecha.ToShortDateString(),
+                            TotalCostos = c.Invercion + c.Facturas,
+                            TotalGastos = c.Costos,
+                            TotalVentas = c.Bancos + c.Efectivo,
+                            Utilidad = (c.Bancos + c.Efectivo) - (c.Invercion + c.Facturas) - c.Costos
+                        });
+
+                        balanceAlmacen.TotalCostos += c.Facturas + c.Invercion;
+                        balanceAlmacen.TotalGastos += c.Costos;
+                        balanceAlmacen.TotalVentas += c.Bancos + c.Efectivo;
+                        balanceAlmacen.TotalUtilidad = balanceAlmacen.TotalVentas - balanceAlmacen.TotalGastos - balanceAlmacen.TotalCostos;
+
+                    }
+                    balanceGeneralAlmacenes.TotalGastos += balanceAlmacen.TotalGastos;
+                    balanceGeneralAlmacenes.TotalCostos += balanceAlmacen.TotalCostos;
+                    balanceGeneralAlmacenes.TotalVentas += balanceAlmacen.TotalVentas;
+                    balanceGeneralAlmacenes.TotalUtilidad += balanceAlmacen.TotalUtilidad;
+
+
+                    balanceAlmacen.balances = cierres;
+                    balanceGeneralAlmacen.Add(balanceAlmacen);
+                }
+
+                balanceGeneralAlmacenes.BalancePorAlmacen = balanceGeneralAlmacen;
+                response.Data = balanceGeneralAlmacenes;
                 response.Mensagge = "Consulta Realizada Con Exito";
                 return response;
             }

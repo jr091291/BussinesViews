@@ -45,11 +45,14 @@
     <Compile Include="DTO\Almacen\AdministradorDTO.cs" />
     <Compile Include="DTO\Almacen\AlmacenDTO.cs" />
     <Compile Include="DTO\Almacen\CierreDTO.cs" />
+    <Compile Include="DTO\Reportes\BalanceGeneralDTO.cs" />
     <Compile Include="DTO\Reportes\DatosGastosDTO.cs" />
     <Compile Include="DTO\Reportes\DatosCostosDTO.cs" />
     <Compile Include="DTO\Almacen\InversionistaDTO.cs" />
     <Compile Include="DTO\Reportes\DatosVentasDto.cs" />
     <Compile Include="DTO\Reportes\SolicitudReporteDTO.cs" />
+    <Compile Include="DTO\Reportes\TotalBalanceGeneralAlmacen.cs" />
+    <Compile Include="DTO\Reportes\TotalBalanceGeneralAlmacenesDTO.cs" />
     <Compile Include="DTO\Reportes\TotalGastosAlmacen.cs" />
     <Compile Include="DTO\Reportes\TotalCostosAlmacenDTO.cs" />
     <Compile Include="DTO\Reportes\TotalCostosAlmacenesDTO.cs" />

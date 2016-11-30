@@ -10,6 +10,7 @@ namespace Entidades.DTO.Reportes
     {
         public DateTime FechaIni { get; set; }
         public DateTime FechaFin { get; set; }
-        public int[] ListadoAlmacenes { get; set; }
+        public List<Almacen.AlmacenDTO> ListadoAlmacenes { get; set; }
+        //Listo así, pero ahora toca corregir algo en los reportes 
     }
 }

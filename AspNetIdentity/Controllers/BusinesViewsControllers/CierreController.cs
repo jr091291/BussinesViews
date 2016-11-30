@@ -32,5 +32,12 @@ namespace AspNetIdentity.Controllers.BusinesViewsControllers
         {
             return Ok(new CierreBLL().getGastos(solicitud));
         }
+
+        [HttpPost]
+        [Route("cierre/balance")]
+        public IHttpActionResult BalanceGeneral(SolicitudReporteDTO solicitud)
+        {
+            return Ok(new CierreBLL().getBalanceGeneral(solicitud));
+        }
     }
 }
