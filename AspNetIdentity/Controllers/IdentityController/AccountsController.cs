@@ -36,7 +36,7 @@ namespace AspNetIdentity.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [Route("user/{username}")]
         public async Task<IHttpActionResult> GetUserByName(string username)
         {

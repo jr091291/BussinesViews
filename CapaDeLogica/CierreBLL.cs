@@ -1,5 +1,6 @@
 ﻿using CapaDeDatos;
 using Entidades.DTO.Almacen;
+using Entidades.DTO.reportes;
 using Entidades.DTO.Reportes;
 using Entidades.DTO.Response;
 using System;
@@ -120,6 +121,122 @@ namespace CapaDeLogica
             catch (Exception e) {
                 response.Mensagge = "Se Ha Presentado Un Error";
                 response.Errors.Add(new ResponseErrorDTO("500",e.Message));
+                return response;
+            }
+        }
+
+        public RespuestaDTO<TotalCostosAlmacenesDTO> getCostos(SolicitudReporteDTO solicitud)
+        {
+            RespuestaDTO<TotalCostosAlmacenesDTO> response = new RespuestaDTO<TotalCostosAlmacenesDTO>();
+            try
+            {
+                TotalCostosAlmacenesDTO totalCostos= new TotalCostosAlmacenesDTO();
+                List<TotalCostosAlmacenDTO> costos = new List<TotalCostosAlmacenDTO>();
+
+                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                {
+                    TotalCostosAlmacenDTO costosAlmacen = new TotalCostosAlmacenDTO();
+                    List<DatosCostosDTO> cierres = new List<DatosCostosDTO>();
+
+                    var almacen = db.Almacenes.Find(idAlmacen);
+
+                    costosAlmacen.Almacen = new AlmacenDTO
+                    {
+                        AlmacenId = almacen.AlmacenId,
+                        Correo = almacen.Correo,
+                        Direccion = almacen.Direccion,
+                        Nombre = almacen.Nombre,
+                        Telefono = almacen.Telefono
+                    };
+
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c => c.Fecha).ToList<Cierre>();
+
+                    foreach (Cierre c in query)
+                    {
+                        cierres.Add(new DatosCostosDTO
+                        {
+                            Fecha = c.Fecha.ToShortDateString(),
+                            Facturas = c.Facturas,
+                            Invercion = c.Invercion,
+                            Total = c.Facturas + c.Invercion 
+                        });
+
+                        costosAlmacen.TotalInversion += c.Invercion;
+                        costosAlmacen.TotalFacturas += c.Efectivo;
+                        costosAlmacen.TotalCostos += c.Facturas + c.Invercion;
+                    }
+                    totalCostos.TotalInverciones += costosAlmacen.TotalInversion;
+                    totalCostos.TotalFacturas += costosAlmacen.TotalFacturas;
+                    totalCostos.TotalCostos += costosAlmacen.TotalCostos;
+
+                    costosAlmacen.costos = cierres;
+                    costos.Add(costosAlmacen);
+                }
+
+                totalCostos.costosPorAlmacen = costos;
+                response.Data = totalCostos;
+                response.Mensagge = "Consulta Realizada Con Exito";
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Mensagge = "Se Ha Presentado Un Error";
+                response.Errors.Add(new ResponseErrorDTO("500", e.Message));
+                return response;
+            }
+        }
+
+        public RespuestaDTO<TotalGastosAlmacenes> getGastos(SolicitudReporteDTO solicitud)
+        {
+            RespuestaDTO<TotalGastosAlmacenes> response = new RespuestaDTO<TotalGastosAlmacenes>();
+            try
+            {
+                TotalGastosAlmacenes totalGastos = new TotalGastosAlmacenes();
+                List<TotalGastosAlmacen> gastos = new List<TotalGastosAlmacen>();
+
+                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                {
+                    TotalGastosAlmacen costosAlmacen = new TotalGastosAlmacen();
+                    List<DatosGastosDTO> cierres = new List<DatosGastosDTO>();
+
+                    var almacen = db.Almacenes.Find(idAlmacen);
+
+                    costosAlmacen.Almacen = new AlmacenDTO
+                    {
+                        AlmacenId = almacen.AlmacenId,
+                        Correo = almacen.Correo,
+                        Direccion = almacen.Direccion,
+                        Nombre = almacen.Nombre,
+                        Telefono = almacen.Telefono
+                    };
+
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c => c.Fecha).ToList<Cierre>();
+
+                    foreach (Cierre c in query)
+                    {
+                        cierres.Add(new DatosGastosDTO
+                        {
+                            Fecha = c.Fecha.ToShortDateString(),
+                            Gastos = c.Costos
+                        });
+
+                        costosAlmacen.TotalGastos += c.Costos;
+                    }
+                    totalGastos.TotalGastos += costosAlmacen.TotalGastos;
+                   
+                    costosAlmacen.Gastos = cierres;
+                    gastos.Add(costosAlmacen);
+                }
+
+                totalGastos.CostosPorAlmacen = gastos;
+                response.Data = totalGastos; 
+                response.Mensagge = "Consulta Realizada Con Exito";
+                return response;
+            }
+            catch (Exception e)
+            {
+                response.Mensagge = "Se Ha Presentado Un Error";
+                response.Errors.Add(new ResponseErrorDTO("500", e.Message));
                 return response;
             }
         }

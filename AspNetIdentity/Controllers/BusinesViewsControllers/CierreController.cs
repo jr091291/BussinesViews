@@ -18,5 +18,19 @@ namespace AspNetIdentity.Controllers.BusinesViewsControllers
         {
             return Ok(new CierreBLL().getVentas(solicitud));
         }
+
+        [HttpPost]
+        [Route("cierre/costos")]
+        public IHttpActionResult ReportesCostos(SolicitudReporteDTO solicitud)
+        {
+            return Ok(new CierreBLL().getCostos(solicitud));
+        }
+
+        [HttpPost]
+        [Route("cierre/gastos")]
+        public IHttpActionResult ReportesGastos(SolicitudReporteDTO solicitud)
+        {
+            return Ok(new CierreBLL().getGastos(solicitud));
+        }
     }
 }
