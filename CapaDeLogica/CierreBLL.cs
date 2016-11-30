@@ -1,5 +1,6 @@
 ﻿using CapaDeDatos;
 using Entidades.DTO.Almacen;
+using Entidades.DTO.Reportes;
 using Entidades.DTO.Response;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,12 @@ namespace CapaDeLogica
                     // preparar el cliente para guardar
                     Cierre cierreDal = new Cierre();
 
-                    var qCietre =  db.Cierres.Where(q => q.Fecha == cierre.Fecha && q.AlmacenId == cierre.AlmacenId).FirstOrDefault<Cierre>();
+                    var qCietre = db.Cierres.Where(q => q.Fecha == cierre.Fecha && q.AlmacenId == cierre.AlmacenId).FirstOrDefault<Cierre>();
 
                     if (qCietre != null)
                     {
                         response.Mensagge = "Ya se Ha Registrado Un Cierre Para Esta Fecha Del Almacen";
-                        response.Errors.Add(new ResponseErrorDTO("", "Fecha: " + qCietre.Fecha.ToString("dd/MM/yyyy") +  " Almacen Id: "+ qCietre.AlmacenId + " Ya Registra Un Cierre"));
+                        response.Errors.Add(new ResponseErrorDTO("", "Fecha: " + qCietre.Fecha.ToString("dd/MM/yyyy") + " Almacen Id: " + qCietre.AlmacenId + " Ya Registra Un Cierre"));
                         return response;
                     }
 
@@ -40,7 +41,7 @@ namespace CapaDeLogica
                     cierreDal.Invercion = cierre.Costos;
                     cierreDal.Costos = cierre.Gastos;
                     cierreDal.Fecha = cierre.Fecha;
-                  
+
                     db.Cierres.Add(cierreDal);
 
                     // preparar la respuesta
@@ -60,6 +61,65 @@ namespace CapaDeLogica
                     response.Mensagge = "Se Ha Presentado Un Error";
                     response.Errors.Add(new ResponseErrorDTO(ex.GetHashCode().ToString(), ex.Message));
                 }
+                return response;
+            }
+        }
+
+        public RespuestaDTO<TotalVentasAlmacenesDTO> getVentas(SolicitudReporteDTO solicitud)
+        {
+            RespuestaDTO<TotalVentasAlmacenesDTO> response = new RespuestaDTO<TotalVentasAlmacenesDTO>();
+            try {
+                TotalVentasAlmacenesDTO totalVentas = new TotalVentasAlmacenesDTO();
+                List<TotalVentasAlmacenDTO> ventas = new List<TotalVentasAlmacenDTO>();
+
+                foreach (int idAlmacen in solicitud.ListadoAlmacenes)
+                {
+                    TotalVentasAlmacenDTO ventasAlmacen = new TotalVentasAlmacenDTO();
+                    List<DatosVentasDto> cierres = new List<DatosVentasDto>();
+
+                    var almacen = db.Almacenes.Find(idAlmacen);
+
+                    ventasAlmacen.Almacen = new AlmacenDTO
+                    {
+                        AlmacenId = almacen.AlmacenId,
+                        Correo = almacen.Correo,
+                        Direccion = almacen.Direccion,
+                        Nombre = almacen.Nombre,
+                        Telefono = almacen.Telefono
+                    };
+
+                    var query = db.Cierres.Where(cierre => cierre.Fecha <= solicitud.FechaFin && cierre.Fecha >= solicitud.FechaIni && cierre.AlmacenId == idAlmacen).OrderBy(c=> c.Fecha).ToList<Cierre>();
+
+                    foreach (Cierre c in query)
+                    {
+                        cierres.Add(new DatosVentasDto
+                        {
+                            Fecha = c.Fecha.ToShortDateString(),
+                            Venta = c.Bancos + c.Efectivo,
+                            Bancos = c.Bancos,
+                            Efectivo = c.Efectivo,
+                        });
+
+                        ventasAlmacen.TotalBancos += c.Bancos;
+                        ventasAlmacen.TotalEfectivo += c.Efectivo;
+                        ventasAlmacen.TotalVentas += c.Bancos + c.Efectivo;
+                    }
+                    totalVentas.TotalBancos += ventasAlmacen.TotalBancos;
+                    totalVentas.TotalEfectivo += ventasAlmacen.TotalEfectivo;
+                    totalVentas.TotalVentas += ventasAlmacen.TotalVentas;
+                    
+                    ventasAlmacen.ventas = cierres;
+                    ventas.Add(ventasAlmacen);
+                }
+
+                totalVentas.ventasPorAlmacen = ventas;
+                response.Data = totalVentas;
+                response.Mensagge = "Consulta Realizada Con Exito";
+                return response;
+            }
+            catch (Exception e) {
+                response.Mensagge = "Se Ha Presentado Un Error";
+                response.Errors.Add(new ResponseErrorDTO("500",e.Message));
                 return response;
             }
         }

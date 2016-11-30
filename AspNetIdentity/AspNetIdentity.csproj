@@ -166,6 +166,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BusinesViewsControllers\CierreController.cs" />
     <Compile Include="Controllers\BusinesViewsControllers\UserController.cs" />
     <Compile Include="Controllers\IdentityController\AccountsController.cs" />
     <Compile Include="Controllers\IdentityController\BaseApiController.cs" />

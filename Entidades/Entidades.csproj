@@ -46,6 +46,10 @@
     <Compile Include="DTO\Almacen\AlmacenDTO.cs" />
     <Compile Include="DTO\Almacen\CierreDTO.cs" />
     <Compile Include="DTO\Almacen\InversionistaDTO.cs" />
+    <Compile Include="DTO\Reportes\DatosVentasDto.cs" />
+    <Compile Include="DTO\Reportes\SolicitudReporteDTO.cs" />
+    <Compile Include="DTO\Reportes\TotalVentasAlmacenesDTO.cs" />
+    <Compile Include="DTO\Reportes\TotalVentasDTO.cs" />
     <Compile Include="DTO\Response\Response.cs" />
     <Compile Include="DTO\Response\ResponseErrorDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
